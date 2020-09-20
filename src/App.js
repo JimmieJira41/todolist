@@ -3,6 +3,11 @@ import ActivityList from './ActivityList'
 import CreateActivity from './CreateActivity'
 
 const activitys = [
+  {
+    title: "Sent todo-list project",
+    date: "21/9/63",
+    description: "BlackCat Agency"
+  }
 ];
 
 localStorage.setItem('activitys', JSON.stringify(activitys));
@@ -14,9 +19,9 @@ export default class App extends Component {
     this.state = {
       activitys: JSON.parse(localStorage.getItem('activitys'))
     };
+
     this.onCreate = this.onCreate.bind(this);
     this.onDelete = this.onDelete.bind(this);
-    this.EditSubmit = this.onEditSubmit.bind(this);
   }
 
   componentWillMount() {
@@ -30,51 +35,38 @@ export default class App extends Component {
 
   }
 
-  onCreate(name,date,description) {
-    // console.log(name+date+description)
+  onCreate(title, date, description) {
+    // console.log(title+date+description);
     const activitys = this.getactivitys();
 
     activitys.push({
-      name,
+      title,
       date,
       description
     });
     this.setState({ activitys });
   }
 
-  onDelete(name) {
+  onDelete(title) {
     const activitys = this.getactivitys();
 
     const filteredactivitys = activitys.filter(product => {
-      return product.name !== name;
+      return product.title !== title;
     })
     this.setState({ activitys: filteredactivitys })
-  }
-  onEditSubmit(name,date, description, originalName) {
-    let activitys = this.getactivitys();
-
-    activitys = activitys.map(product => {
-      if (product.name === originalName) {
-        product.name = name;
-        product.date = date;
-        product.description = description;
-
-      }
-      return product;
-    });
-    this.setState({ activitys });
   }
 
   render() {
     return (
       <div className="App">
-        <h1 className="text-center text-uppercase ">todo list</h1>
+        <div className="text-center mt-3">
+          <h1 className="btn btn-warning text-center text-uppercase">todo list</h1>
+        </div>
         <div className="container-fiuld m-4">
           <div className="row">
             <div className="col-xl-6 col-md-6 col-s-12 col-12 mb-2">
               <div className="card">
                 <div className="card-body shadow">
-                  {/* component create activity */}
                   <CreateActivity
                     onCreate={this.onCreate}
                   />
@@ -91,15 +83,13 @@ export default class App extends Component {
                     <td colSpan="2">Let's do it!</td>
                   </tr>
                 </thead>
-                {/* <tbody> */}
                 {
-                  this.state.activitys.map((activitys , i) => {
+                  this.state.activitys.map((activitys, i) => {
                     return (
                       <ActivityList
                         key={i}
                         {...activitys}
                         onDelete={this.onDelete}
-                        onEditSubmit={this.onEditSubmit}
                       />
                     )
                   })
@@ -109,7 +99,6 @@ export default class App extends Component {
           </div>
         </div>
       </div>
-
     )
   }
 }
